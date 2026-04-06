@@ -95,6 +95,7 @@ rental-marketplace/
 - Razorpay Account
 - Gmail Account (for email verification)
 
+
 ### Backend Setup
 
 1. **Navigate to backend directory**

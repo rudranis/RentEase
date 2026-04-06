@@ -1,0 +1,143 @@
+╔════════════════════════════════════════════════════════════════╗
+║              RentSystem - Demo Users Quick Card                 ║
+║                    Black Screen Fixed! ✅                        ║
+╚════════════════════════════════════════════════════════════════╝
+
+┌─ STEP 1: Seed Database ──────────────────────────────────────┐
+│                                                                │
+│  $ cd backend                                                  │
+│  $ npm run seed                                                │
+│                                                                │
+│  ⏱️  Takes ~5 seconds                                          │
+│  ✅ Creates all demo users & sample listings                  │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+
+┌─ STEP 2: Start Application ──────────────────────────────────┐
+│                                                                │
+│  Terminal 1 (Backend):                                         │
+│  $ cd backend && npm run dev                                   │
+│  Runs on: http://localhost:5000                               │
+│                                                                │
+│  Terminal 2 (Frontend):                                        │
+│  $ cd frontend && npm run dev                                  │
+│  Runs on: http://localhost:3000                               │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════╗
+║                      DEMO USERS                                ║
+╠════════════════════════════════════════════════════════════════╣
+
+┌─ 👑 ADMIN (Full Access) ─────────────────────────────────────┐
+│  Email: admin@rentapp.com                                     │
+│  Pass:  Admin@2005                                            │
+│  Role:  Can manage everything                                 │
+└────────────────────────────────────────────────────────────────┘
+
+┌─ 👨‍💼 OWNER 1 (Can Create Listings) ────────────────────────────┐
+│  Email: owner@demo.com                                        │
+│  Pass:  Demo@123                                              │
+│  Role:  Create and manage rental listings                     │
+│  City:  Mumbai                                                │
+│  Has:   Sample apartment listing                              │
+└────────────────────────────────────────────────────────────────┘
+
+┌─ 👨 USER 1 (Browse & Book) ───────────────────────────────────┐
+│  Email: user@demo.com                                         │
+│  Pass:  Demo@123                                              │
+│  Role:  Can browse and book listings                          │
+│  City:  Mumbai                                                │
+└────────────────────────────────────────────────────────────────┘
+
+┌─ 👩 USER 2 (Browse & Book) ───────────────────────────────────┐
+│  Email: priya@demo.com                                        │
+│  Pass:  Demo@123                                              │
+│  Role:  Can browse and book listings                          │
+│  City:  Bangalore                                             │
+└────────────────────────────────────────────────────────────────┘
+
+┌─ 👨‍💼 OWNER 2 (Car Rental) ──────────────────────────────────────┐
+│  Email: amit@demo.com                                         │
+│  Pass:  Demo@123                                              │
+│  Role:  Create and manage car rental listings                 │
+│  City:  Delhi                                                 │
+│  Has:   Sample car listing                                    │
+└────────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════╗
+║                    SAMPLE LISTINGS                             ║
+╠════════════════════════════════════════════════════════════════╣
+
+📍 Modern 2BHK Apartment in Bandra, Mumbai
+   Owner: Rajesh Kumar (owner@demo.com)
+   Price: ₹2,500/day | ₹50,000/month
+   By: Rajesh Kumar | Rating: 4.5/5
+
+🚗 Honda City - Well Maintained, Delhi
+   Owner: Amit Patel (amit@demo.com)
+   Price: ₹1,500/day
+   By: Amit Patel | Rating: 4.8/5
+
+╔════════════════════════════════════════════════════════════════╗
+║                    QUICK TESTS                                 ║
+╠════════════════════════════════════════════════════════════════╣
+
+Test 1: Login (Instant Access)
+  1. Go to http://localhost:3000/login
+  2. Use: user@demo.com / Demo@123
+  3. Should see home page + listings immediately ✅
+
+Test 2: Register New User
+  1. Go to http://localhost:3000/register
+  2. Fill in new user data
+  3. Redirected to login page ✅
+  4. Login with new credentials ✅
+
+Test 3: Browse Listings
+  1. After login, click "Listings"
+  2. Should see 2 sample listings ✅
+
+Test 4: Create Listing (Owner Only)
+  1. Login as owner@demo.com
+  2. Go to "Create Listing"
+  3. Fill details + submit ✅
+
+╔════════════════════════════════════════════════════════════════╗
+║              WHAT WAS FIXED FOR BLACK SCREEN                   ║
+╠════════════════════════════════════════════════════════════════╣
+
+✅ Added VITE_SOCKET_URL to frontend .env
+   → Socket connection won't crash app anymore
+
+✅ Improved socket.io error handling in App.jsx
+   → Graceful fallback if connection fails
+
+✅ Fixed app to handle missing socket gracefully
+   → Black screen issue resolved!
+
+╔════════════════════════════════════════════════════════════════╗
+║                    IF STILL BLACK SCREEN                       ║
+╠════════════════════════════════════════════════════════════════╣
+
+1. Clear browser data:
+   localStorage.clear()
+   location.reload()
+
+2. Check console (F12):
+   Look for red error messages
+
+3. Verify backend is running:
+   Should see "Server running on port 5000"
+
+4. Verify .env file:
+   VITE_API_URL=http://localhost:5000/api
+   VITE_SOCKET_URL=http://localhost:5000
+
+5. Completely restart:
+   Stop both servers (Ctrl+C)
+   npm run dev on both
+
+╔════════════════════════════════════════════════════════════════╗
+║  All Set! 🎉 Start with Step 1 above to seed the database    ║
+╚════════════════════════════════════════════════════════════════╝
