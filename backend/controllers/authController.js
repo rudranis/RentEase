@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import { sendEmail } from '../utils/sendEmail.js';
 
 const generateToken = (id, role) => {
     return jwt.sign({ id, role }, process.env.JWT_SECRET, {
@@ -66,6 +67,7 @@ export const register = async (req, res) => {
 
         console.log(`   ✅ Validation passed, creating user...`);
 
+        const registrationOtp = Math.floor(100000 + Math.random() * 900000).toString();
         user = new User({
             name,
             email,
@@ -73,14 +75,27 @@ export const register = async (req, res) => {
             phone,
             avatar,
             isVerified: true,
+            verificationOTP: registrationOtp,
+            otpExpiry: new Date(Date.now() + 10 * 60 * 1000),
         });
 
         await user.save();
 
         console.log(`   ✅ User created successfully - ID: ${user._id}`);
 
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const welcomeLink = `${frontendUrl}`;
+
+        try {
+            await sendEmail(email, 'welcome', { name, otp: registrationOtp });
+            console.log(`   ✅ Registration OTP email sent to ${email}`);
+        } catch (emailError) {
+            console.error(`   ⚠️ Registration OTP email failed:`, emailError.message);
+            return res.status(500).json({ message: 'Registration succeeded but failed to send OTP email. Please try again later.' });
+        }
+
         const response = {
-            message: 'Registration successful. Please login to continue.',
+            message: 'Registration successful. Check your email for the OTP.',
             userId: user._id,
         };
 
@@ -169,15 +184,16 @@ export const forgotPassword = async (req, res) => {
         user.otpExpiry = new Date(Date.now() + 1 * 60 * 60 * 1000); // 1 hour
         await user.save();
 
-        const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+        const resetLink = `${frontendUrl}/reset-password/${resetToken}`;
 
         try {
             await sendEmail(email, 'passwordReset', { name: user.name, resetLink });
+            return res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
         } catch (emailErr) {
             console.error('Password reset email failed:', emailErr.message);
+            return res.status(500).json({ message: 'Failed to send reset email. Please try again later.' });
         }
-
-        res.status(200).json({ message: 'If that email exists, a reset link has been sent.' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error', error: error.message });

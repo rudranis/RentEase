@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiSearch, FiArrowRight, FiRefreshCw, FiZap, FiShield, FiHeart } from "react-icons/fi";
+import {
+  FiSearch, FiArrowRight, FiRefreshCw, FiZap,
+  FiShield, FiHeart, FiStar, FiUsers, FiPackage
+} from "react-icons/fi";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ListingCard from "../components/ListingCard";
@@ -43,14 +46,21 @@ export default function Home() {
   };
 
   const categories = [
-    { name: "Apartment", icon: "🏠", color: "bg-blue-500" },
-    { name: "Bike", icon: "🏍️", color: "bg-orange-500" },
-    { name: "Car", icon: "🚗", color: "bg-red-500" },
-    { name: "Tools", icon: "🔧", color: "bg-gray-600" },
-    { name: "Electronics", icon: "💻", color: "bg-purple-600" },
-    { name: "Furniture", icon: "🪑", color: "bg-amber-700" },
-    { name: "Books", icon: "📚", color: "bg-emerald-600" },
-    { name: "Sports", icon: "⚽", color: "bg-sky-500" },
+    { name: "Apartment", icon: "🏠", color: "from-blue-400 to-blue-600", query: "apartment" },
+    { name: "Bike", icon: "🏍️", color: "from-orange-400 to-orange-600", query: "bike" },
+    { name: "Car", icon: "🚗", color: "from-red-400 to-red-600", query: "car" },
+    { name: "Tools", icon: "🔧", color: "from-gray-500 to-gray-700", query: "tools" },
+    { name: "Electronics", icon: "💻", color: "from-purple-400 to-purple-600", query: "electronics" },
+    { name: "Furniture", icon: "🪑", color: "from-amber-400 to-amber-600", query: "furniture" },
+    { name: "Books", icon: "📚", color: "from-emerald-400 to-emerald-600", query: "books" },
+    { name: "Sports", icon: "⚽", color: "from-sky-400 to-sky-600", query: "sports" },
+  ];
+
+  const stats = [
+    { icon: <FiUsers />, value: "10,000+", label: "Active Users" },
+    { icon: <FiPackage />, value: "5,000+", label: "Items Listed" },
+    { icon: <FiStar />, value: "4.9/5", label: "Avg Rating" },
+    { icon: <FiShield />, value: "100%", label: "Secure Payments" },
   ];
 
   return (
@@ -58,64 +68,90 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-        {/* Background Decorative Elements */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-200/40 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-[10%] right-[-10%] w-[40%] h-[40%] bg-blue-200/40 rounded-full blur-[120px] animate-pulse" />
+      <section className="relative pt-32 pb-24 md:pt-52 md:pb-36 overflow-hidden">
+        {/* Animated Background */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-[-10%] left-[-15%] w-[45%] h-[60%] bg-primary/10 rounded-full blur-[100px]" />
+          <div className="absolute top-[20%] right-[-10%] w-[40%] h-[50%] bg-blue-400/10 rounded-full blur-[100px]" />
+          <div className="absolute bottom-[-5%] left-[30%] w-[40%] h-[40%] bg-purple-300/10 rounded-full blur-[100px]" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border border-gray-100 mb-8 animate-float">
-            <span className="flex h-2 w-2 rounded-full bg-primary" />
-            <span className="text-sm font-bold text-gray-600 tracking-wide uppercase">The Future of Renting</span>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/80 backdrop-blur-sm shadow-md border border-primary/10 mb-10">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-sm font-black text-gray-600 tracking-widest uppercase">
+              India's #1 Peer-to-Peer Rental Platform
+            </span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight text-gray-900">
-            Rent <span className="gradient-text">Anything</span> <br /> 
-            from <span className="underline decoration-blue-500/30">Anyone</span>.
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tight text-gray-900 leading-none">
+            Rent{" "}
+            <span className="relative">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">
+                Anything
+              </span>
+              <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary to-blue-500 rounded-full opacity-30" />
+            </span>
+            <br />
+            from <em className="not-italic text-gray-700">Anyone</em>.
           </h1>
-          
-          <p className="text-xl text-gray-500 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Discover a world of possibilities. From high-end gear to everyday essentials, 
-            get what you need without the commitment of ownership.
+
+          <p className="text-xl md:text-2xl text-gray-500 mb-14 max-w-2xl mx-auto leading-relaxed font-medium">
+            Discover a community-driven marketplace. Get what you need without the commitment of ownership.
           </p>
 
-          {/* Premium Search Bar */}
+          {/* Search Bar */}
           <form
             onSubmit={handleSearch}
-            className="flex gap-2 max-w-2xl mx-auto p-2 glass rounded-2xl shadow-2xl shadow-purple-500/10 mb-16"
+            className="flex gap-2 max-w-2xl mx-auto p-2.5 bg-white rounded-3xl shadow-2xl shadow-gray-200/80 border border-gray-100 mb-16"
           >
-            <div className="flex-1 flex items-center px-4">
-              <FiSearch className="text-gray-400 mr-2" size={20} />
+            <div className="flex-1 flex items-center px-4 gap-3">
+              <FiSearch className="text-gray-400 flex-shrink-0" size={20} />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="What are you looking for today?"
-                className="w-full bg-transparent border-none focus:ring-0 text-gray-700 placeholder-gray-400 font-medium py-3"
+                placeholder="Search cameras, bikes, furniture..."
+                className="w-full bg-transparent border-none focus:ring-0 text-gray-700 placeholder-gray-400 font-bold py-2 text-lg"
               />
             </div>
             <button
               type="submit"
-              className="btn-primary flex items-center gap-2"
+              className="bg-primary text-white font-black px-8 py-3 rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center gap-2 text-sm"
             >
-              Search Now
+              Search
+              <FiArrowRight />
             </button>
           </form>
 
-          {/* Animated Categories */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 max-w-6xl mx-auto">
+          {/* Stats Bar */}
+          <div className="flex flex-wrap justify-center gap-8 mb-16">
+            {stats.map((stat, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  {stat.icon}
+                </div>
+                <div className="text-left">
+                  <p className="font-black text-gray-900 text-lg leading-none">{stat.value}</p>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{stat.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Categories Grid */}
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-3 max-w-4xl mx-auto">
             {categories.map((cat) => (
               <button
                 key={cat.name}
-                onClick={() => navigate(`/listings?category=${cat.name.toLowerCase()}`)}
-                className="group flex flex-col items-center gap-3 p-4 bg-white rounded-2xl hover:bg-primary transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-purple-500/20"
+                onClick={() => navigate(`/listings?category=${cat.query}`)}
+                className="group flex flex-col items-center gap-2.5 p-3 bg-white rounded-2xl hover:scale-105 transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-primary/10 border border-gray-50"
               >
-                <div className={`w-12 h-12 rounded-xl ${cat.color} bg-opacity-10 group-hover:bg-opacity-100 flex items-center justify-center text-2xl transition-all duration-300 group-hover:scale-110`}>
+                <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center text-xl shadow-md`}>
                   {cat.icon}
                 </div>
-                <span className="text-sm font-bold text-gray-600 group-hover:text-white transition-colors">
+                <span className="text-xs font-black text-gray-600 group-hover:text-primary transition-colors">
                   {cat.name}
                 </span>
               </button>
@@ -128,35 +164,33 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 py-20">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
           <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mb-4">
+              ✨ Handpicked For You
+            </div>
             <h2 className="text-4xl font-black text-gray-900 mb-2 tracking-tight">
               Featured Listings
             </h2>
-            <p className="text-gray-500 font-medium">Handpicked items from our trusted community</p>
+            <p className="text-gray-500 font-medium">Top-rated items from verified owners</p>
           </div>
           <button
             onClick={() => navigate("/listings")}
-            className="flex items-center gap-2 font-bold text-primary group"
+            className="flex items-center gap-2 font-black text-primary group bg-primary/5 px-5 py-2.5 rounded-xl hover:bg-primary/10 transition-all"
           >
-            Explore all items <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+            View All Items
+            <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 
-        {/* Listings Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
-            <>
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="h-96 glass rounded-2xl animate-pulse" />
-              ))}
-            </>
+            Array(6).fill(0).map((_, i) => (
+              <div key={i} className="h-96 bg-white rounded-[2rem] animate-pulse border border-gray-100" />
+            ))
           ) : error ? (
-            <div className="col-span-full glass border-red-100 p-12 text-center rounded-3xl">
+            <div className="col-span-full bg-white p-12 text-center rounded-[2rem] border border-red-100">
               <p className="text-red-500 font-bold text-lg mb-6">{error}</p>
-              <button
-                onClick={fetchFeaturedListings}
-                className="btn-primary bg-red-500 shadow-red-500/20"
-              >
-                <FiRefreshCw className="inline mr-2" /> Try Again
+              <button onClick={fetchFeaturedListings} className="bg-primary text-white font-black px-8 py-3 rounded-xl hover:bg-primary/90 flex items-center gap-2 mx-auto">
+                <FiRefreshCw /> Retry
               </button>
             </div>
           ) : featuredListings.length > 0 ? (
@@ -164,52 +198,46 @@ export default function Home() {
               <ListingCard key={listing._id} listing={listing} />
             ))
           ) : (
-            <div className="col-span-full glass p-20 text-center rounded-3xl">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">📦</div>
+            <div className="col-span-full bg-white p-20 text-center rounded-[2rem] border border-gray-100">
+              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">📦</div>
               <p className="text-gray-400 font-bold text-xl mb-2">No listings yet</p>
-              <p className="text-gray-500 mb-8 max-w-sm mx-auto">Be the first to share something amazing with your neighborhood!</p>
-              <button
-                onClick={() => navigate("/create-listing")}
-                className="btn-primary"
-              >
-                Create Listing
+              <p className="text-gray-400 mb-8 max-w-sm mx-auto">Be the first to share something with your community!</p>
+              <button onClick={() => navigate("/create-listing")} className="bg-primary text-white font-black px-8 py-3 rounded-xl shadow-lg shadow-primary/20">
+                Create First Listing
               </button>
             </div>
           )}
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="bg-white py-24 mb-20 border-y border-gray-100">
+      {/* How It Works */}
+      <section className="bg-white py-24 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">Why RentEase?</h2>
-            <p className="text-gray-500 font-medium">Building the safest marketplace for everyone</p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest mb-4">
+              Simple Process
+            </div>
+            <h2 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">How RentEase Works</h2>
+            <p className="text-gray-500 font-medium max-w-md mx-auto">Three simple steps to rent anything you need</p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative">
+            <div className="hidden md:block absolute top-12 left-[25%] right-[25%] h-0.5 bg-gradient-to-r from-primary/20 via-primary/50 to-primary/20" />
             {[
-              {
-                icon: <FiZap className="text-yellow-500" />,
-                title: "Instant Booking",
-                desc: "No back-and-forth. Find what you need and book it in seconds with real-time updates."
-              },
-              {
-                icon: <FiShield className="text-blue-500" />,
-                title: "Secure Payments",
-                desc: "Your money is safe with us. We hold payments until the rental is successfully completed."
-              },
-              {
-                icon: <FiHeart className="text-red-500" />,
-                title: "Verified Community",
-                desc: "Real reviews and verified profiles ensure a trustworthy experience for every member."
-              }
+              { step: "01", icon: <FiSearch size={28} />, title: "Find Your Item", desc: "Browse thousands of listings across categories. Filter by location, price, and more." },
+              { step: "02", icon: <FiShield size={28} />, title: "Book Securely", desc: "Reserve your item with our secure OTP-verified booking system and Razorpay payments." },
+              { step: "03", icon: <FiHeart size={28} />, title: "Enjoy & Return", desc: "Use the item, then return it. Your deposit is refunded after safe return." },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center text-center group">
-                <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-3xl mb-6 group-hover:bg-primary/5 group-hover:scale-110 transition-all">
-                  {item.icon}
+                <div className="relative mb-8">
+                  <div className="w-20 h-20 rounded-2xl bg-primary/5 border-2 border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all duration-300 shadow-lg">
+                    {item.icon}
+                  </div>
+                  <span className="absolute -top-3 -right-3 w-8 h-8 bg-primary text-white rounded-xl flex items-center justify-center text-xs font-black shadow-lg">
+                    {item.step}
+                  </span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+                <h3 className="text-xl font-black text-gray-900 mb-3">{item.title}</h3>
                 <p className="text-gray-500 leading-relaxed font-medium">{item.desc}</p>
               </div>
             ))}
@@ -217,26 +245,55 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Why Us Section */}
+      <section className="max-w-7xl mx-auto px-4 py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-black text-gray-900 mb-4 tracking-tight">Why Choose RentEase?</h2>
+          <p className="text-gray-500 font-medium">The safest and most reliable rental platform in India</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { icon: <FiZap className="text-yellow-500" />, bg: "bg-yellow-50", title: "Instant Booking", desc: "No back-and-forth. Book in seconds with real-time availability and instant confirmation." },
+            { icon: <FiShield className="text-blue-500" />, bg: "bg-blue-50", title: "Secure Payments", desc: "Razorpay-powered checkout. Your money stays safe until the rental is confirmed." },
+            { icon: <FiHeart className="text-red-500" />, bg: "bg-red-50", title: "Verified Community", desc: "Real reviews and verified profiles ensure a trustworthy experience every time." },
+          ].map((item, i) => (
+            <div key={i} className={`${item.bg} rounded-[2rem] p-8 group hover:-translate-y-2 transition-all duration-300`}>
+              <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-3xl mb-6 shadow-sm group-hover:scale-110 transition-transform">
+                {item.icon}
+              </div>
+              <h3 className="text-xl font-black text-gray-900 mb-3">{item.title}</h3>
+              <p className="text-gray-500 leading-relaxed font-medium">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="max-w-7xl mx-auto px-4 pb-24">
-        <div className="relative rounded-[2.5rem] overflow-hidden bg-primary p-12 md:p-20 text-center">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl -ml-32 -mb-32" />
-          
+        <div className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-r from-primary via-purple-600 to-blue-600 p-12 md:p-20 text-center">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl -mr-40 -mt-40" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl -ml-40 -mb-40" />
+
           <div className="relative z-10">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter">
-              Start your rental <br /> journey today.
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white text-xs font-black uppercase tracking-widest mb-8 border border-white/20">
+              🚀 Join 10,000+ Happy Users
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-tight">
+              Start earning from <br /> your idle items today.
             </h2>
+            <p className="text-white/70 font-medium text-lg mb-10 max-w-md mx-auto">
+              Turn unused items into income. List for free, earn instantly.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={() => navigate("/register")}
-                className="bg-white text-primary font-black py-4 px-10 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10"
+                className="bg-white text-primary font-black py-4 px-10 rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/20 text-lg"
               >
-                Join for Free
+                Join for Free →
               </button>
               <button
                 onClick={() => navigate("/listings")}
-                className="bg-primary-foreground/10 text-white font-bold py-4 px-10 rounded-2xl border-2 border-white/20 hover:bg-white/10 transition-all"
+                className="bg-white/10 text-white font-black py-4 px-10 rounded-2xl border-2 border-white/20 hover:bg-white/20 transition-all text-lg"
               >
                 Browse Items
               </button>

@@ -6,7 +6,14 @@ import Footer from "../components/Footer";
 import api from "../api/axios";
 import toast from "react-hot-toast";
 import { loginSuccess } from "../features/auth/authSlice";
-import { FiMail, FiLock, FiArrowRight, FiShield } from "react-icons/fi";
+import {
+  FiMail,
+  FiLock,
+  FiArrowRight,
+  FiShield,
+  FiEye,
+  FiEyeOff,
+} from "react-icons/fi";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -16,6 +23,7 @@ export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) navigate("/");
@@ -25,8 +33,10 @@ export default function Login() {
   const validateForm = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim() || !emailRegex.test(formData.email)) newErrors.email = "Valid email is required";
-    if (formData.password.length < 6) newErrors.password = "Password must be 6+ chars";
+    if (!formData.email.trim() || !emailRegex.test(formData.email))
+      newErrors.email = "Valid email is required";
+    if (formData.password.length < 6)
+      newErrors.password = "Password must be 6+ chars";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -64,14 +74,20 @@ export default function Login() {
       <div className="flex-1 flex items-center justify-center px-4 pt-32 pb-20 relative z-10">
         <div className="w-full max-w-md">
           <div className="text-center mb-10">
-            <h1 className="text-4xl font-black text-gray-900 mb-2 tracking-tight">Welcome <span className="gradient-text">Back.</span></h1>
-            <p className="text-gray-400 font-bold uppercase text-xs tracking-widest">Sign in to manage your rentals.</p>
+            <h1 className="text-4xl font-black text-gray-900 mb-2 tracking-tight">
+              Welcome <span className="gradient-text">Back.</span>
+            </h1>
+            <p className="text-gray-400 font-bold uppercase text-xs tracking-widest">
+              Sign in to manage your rentals.
+            </p>
           </div>
 
           <div className="glass p-8 md:p-10 rounded-[2.5rem] shadow-2xl shadow-purple-500/5 border border-white">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest px-2">Email Address</label>
+                <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest px-2">
+                  Email Address
+                </label>
                 <div className="relative group">
                   <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
                   <input
@@ -83,27 +99,53 @@ export default function Login() {
                     className="w-full pl-11 pr-4 py-4 bg-white rounded-2xl border border-gray-100 focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-bold text-gray-700"
                     disabled={loading}
                   />
-                  {errors.email && <p className="text-red-500 text-[10px] font-bold mt-1 px-2">{errors.email}</p>}
+                  {errors.email && (
+                    <p className="text-red-500 text-[10px] font-bold mt-1 px-2">
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between items-center px-2">
-                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">Password</label>
-                  <Link to="/forgot-password" size="xs" className="text-[10px] font-black uppercase text-primary hover:underline">Forgot?</Link>
+                  <label className="text-[10px] font-black uppercase text-gray-400 tracking-widest">
+                    Password
+                  </label>
+                  <Link
+                    to="/forgot-password"
+                    className="text-[10px] font-black uppercase text-primary hover:underline"
+                  >
+                    Forgot?
+                  </Link>
                 </div>
                 <div className="relative group">
                   <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className="w-full pl-11 pr-4 py-4 bg-white rounded-2xl border border-gray-100 focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-bold text-gray-700"
+                    className="w-full pl-11 pr-12 py-4 bg-white rounded-2xl border border-gray-100 focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all font-bold text-gray-700"
                     disabled={loading}
                   />
-                  {errors.password && <p className="text-red-500 text-[10px] font-bold mt-1 px-2">{errors.password}</p>}
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <FiEyeOff size={18} />
+                    ) : (
+                      <FiEye size={18} />
+                    )}
+                  </button>
+                  {errors.password && (
+                    <p className="text-red-500 text-[10px] font-bold mt-1 px-2">
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -113,26 +155,41 @@ export default function Login() {
                 className="w-full btn-primary py-4 text-lg font-black shadow-purple-500/20 flex items-center justify-center gap-2 group"
               >
                 {loading ? "Authorizing..." : "Sign In"}
-                {!loading && <FiArrowRight className="group-hover:translate-x-1 transition-transform" />}
+                {!loading && (
+                  <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+                )}
               </button>
             </form>
 
             <div className="mt-10 pt-10 border-t border-gray-100 flex flex-col items-center gap-6">
               <p className="text-sm font-bold text-gray-400">
-                New to RentEase? <Link to="/register" className="text-primary hover:underline font-black">Create Account</Link>
+                New to RentEase?{" "}
+                <Link
+                  to="/register"
+                  className="text-primary hover:underline font-black"
+                >
+                  Create Account
+                </Link>
               </p>
-              
+
               <div className="flex items-center gap-4 w-full">
                 <div className="h-px bg-gray-100 flex-1" />
-                <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Demo Access</span>
+                <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                  Demo Access
+                </span>
                 <div className="h-px bg-gray-100 flex-1" />
               </div>
 
               <div className="w-full p-4 bg-gray-50 rounded-2xl border border-gray-100 flex items-start gap-3">
                 <FiShield className="text-primary mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-[10px] font-black text-gray-400 uppercase leading-none mb-1">Root Admin Login</p>
-                  <p className="text-xs font-bold text-gray-600">admin@demo.com <span className="opacity-30 mx-1">|</span> admin123</p>
+                  <p className="text-[10px] font-black text-gray-400 uppercase leading-none mb-1">
+                    Root Admin Login
+                  </p>
+                  <p className="text-xs font-bold text-gray-600">
+                    admin@demo.com <span className="opacity-30 mx-1">|</span>{" "}
+                    admin123
+                  </p>
                 </div>
               </div>
             </div>
