@@ -101,9 +101,21 @@ export const createListing = async (req, res) => {
         console.log(`   Category: ${category}`);
         console.log(`   Price/Day: ${pricePerDay}`);
 
-        if (!title || !description || !category || !pricePerDay || !deposit) {
-            console.log(`   ❌ Missing required fields`);
-            return res.status(400).json({ message: 'Required fields are missing' });
+        const parsedPricePerDay = Number(pricePerDay);
+        const parsedDeposit = Number(deposit);
+        const parsedPricePerWeek = pricePerWeek ? Number(pricePerWeek) : parsedPricePerDay * 6;
+
+        if (
+            !title ||
+            !description ||
+            !category ||
+            Number.isNaN(parsedPricePerDay) ||
+            parsedPricePerDay <= 0 ||
+            Number.isNaN(parsedDeposit) ||
+            parsedDeposit < 0
+        ) {
+            console.log(`   ❌ Missing required or invalid fields`);
+            return res.status(400).json({ message: 'Required fields are missing or invalid' });
         }
 
         const listingLocation = typeof location === 'string' ? JSON.parse(location) : location;
@@ -136,9 +148,9 @@ export const createListing = async (req, res) => {
             description,
             category,
             images: imagePaths,
-            pricePerDay: Number(pricePerDay),
-            pricePerWeek: pricePerWeek ? Number(pricePerWeek) : Number(pricePerDay) * 6,
-            deposit: Number(deposit),
+            pricePerDay: parsedPricePerDay,
+            pricePerWeek: parsedPricePerWeek,
+            deposit: parsedDeposit,
             location: listingLocation,
             deliveryAvailable: deliveryAvailable === 'true' || deliveryAvailable === true,
             deliveryRadius: deliveryRadius ? Number(deliveryRadius) : 0,

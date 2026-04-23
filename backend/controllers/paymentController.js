@@ -8,11 +8,21 @@ import Notification from '../models/Notification.js';
 // Lazy initialize Razorpay instance
 let razorpay;
 const getRazorpayInstance = () => {
-    if (!razorpay && process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
-        razorpay = new Razorpay({
-            key_id: process.env.RAZORPAY_KEY_ID,
-            key_secret: process.env.RAZORPAY_KEY_SECRET,
+    if (!razorpay) {
+        const razorpayKeyId = process.env.RAZORPAY_KEY_ID;
+        const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET;
+
+        console.log('Razorpay config loaded:', {
+            keyId: razorpayKeyId ? 'set' : 'missing',
+            keySecret: razorpayKeySecret ? 'set' : 'missing',
         });
+
+        if (razorpayKeyId && razorpayKeySecret) {
+            razorpay = new Razorpay({
+                key_id: razorpayKeyId,
+                key_secret: razorpayKeySecret,
+            });
+        }
     }
     return razorpay;
 };
@@ -41,6 +51,14 @@ export const createOrder = async (req, res) => {
             return res.status(403).json({ message: 'Not authorized' });
         }
 
+        // Validate amount
+        if (!booking.totalAmount || booking.totalAmount <= 0) {
+            return res.status(400).json({
+                message: 'Invalid booking amount. Please ensure the listing has valid pricing.',
+                totalAmount: booking.totalAmount
+            });
+        }
+
         // Create Razorpay order
         const options = {
             amount: Math.round(booking.totalAmount * 100), // Amount in paise
@@ -56,6 +74,12 @@ export const createOrder = async (req, res) => {
         if (!rz) {
             return res.status(500).json({ message: 'Payment gateway not configured' });
         }
+        console.log('Creating Razorpay order with options:', {
+            amount: options.amount,
+            currency: options.currency,
+            receipt: options.receipt,
+        });
+
         const order = await rz.orders.create(options);
 
         // Create payment record
@@ -77,8 +101,14 @@ export const createOrder = async (req, res) => {
             paymentId: payment._id,
         });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Razorpay createOrder error:', error);
+        const errorMessage =
+            error.description ||
+            error.error?.description ||
+            error.message ||
+            'Server error';
+        const status = error.statusCode || 500;
+        res.status(status).json({ message: errorMessage });
     }
 };
 

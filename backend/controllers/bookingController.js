@@ -27,6 +27,14 @@ export const createBooking = async (req, res) => {
             return res.status(404).json({ message: 'Listing not found' });
         }
 
+        if (listing.pricePerDay == null || listing.pricePerDay <= 0) {
+            return res.status(400).json({ message: 'Listing price is invalid. Please choose a listing with a valid daily price.' });
+        }
+
+        if (listing.deposit == null || listing.deposit < 0) {
+            return res.status(400).json({ message: 'Listing deposit is invalid. Please contact the owner.' });
+        }
+
         const start = new Date(startDate);
         const end = new Date(endDate);
         const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
@@ -37,6 +45,7 @@ export const createBooking = async (req, res) => {
 
         const totalAmount =
             totalDays * listing.pricePerDay +
+            listing.deposit +
             (deliveryRequired ? listing.deliveryCharge : 0);
 
         const renter = await User.findById(req.userId);

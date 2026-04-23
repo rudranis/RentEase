@@ -1,46 +1,76 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiCheckCircle } from "react-icons/fi";
+import { FiCheckCircle, FiHome, FiCalendar, FiArrowRight } from "react-icons/fi";
+import Navbar from "../components/Navbar";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-8">
-      <div className="bg-white rounded-lg shadow p-8 max-w-md w-full text-center">
-        <FiCheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
-        <h1 className="text-3xl font-bold mb-2">Payment Successful!</h1>
-        <p className="text-gray-600 mb-8">
-          Your booking has been confirmed. You will receive a confirmation email
-          shortly with all the details.
-        </p>
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-8">
-          <p className="text-sm text-green-800">
-            <span className="font-semibold">Booking ID:</span> #BK123456789
-          </p>
+  return (
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <Navbar />
+
+      <div className="max-w-lg mx-auto px-4 pt-40 pb-20 text-center">
+        {/* Success Animation */}
+        <div className="relative mb-10">
+          <div className="w-32 h-32 bg-green-100 rounded-full flex items-center justify-center mx-auto animate-bounce">
+            <FiCheckCircle className="text-green-500 w-16 h-16" />
+          </div>
+          <div className="absolute inset-0 w-32 h-32 mx-auto rounded-full border-4 border-green-300 animate-ping opacity-30" />
         </div>
 
-        <div className="space-y-3">
+        <h1 className="text-5xl font-black text-gray-900 mb-4 tracking-tight">
+          Payment <br />
+          <span className="text-green-500">Successful!</span>
+        </h1>
+        <p className="text-gray-500 font-medium mb-3 text-lg">
+          Your booking has been confirmed and the owner has been notified.
+        </p>
+        <p className="text-gray-400 font-bold text-sm mb-10">
+          A confirmation email has been sent to your inbox.
+        </p>
+
+        {/* Info Card */}
+        <div className="bg-white rounded-[2rem] border border-gray-100 p-6 mb-8 shadow-sm text-left">
+          <div className="flex items-start gap-4 p-4 bg-green-50 rounded-2xl border border-green-100">
+            <FiCheckCircle className="text-green-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-black text-green-800 text-sm mb-1">What happens next?</p>
+              <ul className="text-sm font-bold text-green-700 space-y-1 list-none">
+                <li>• The owner will finalize your booking</li>
+                <li>• You'll receive pickup/delivery details via email</li>
+                <li>• Your security deposit is refundable after return</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="space-y-4">
           <button
             onClick={() => navigate("/my-bookings")}
-            className="w-full bg-purple-600 text-white font-semibold py-2 rounded-lg hover:bg-purple-700"
+            className="w-full py-4 bg-primary text-white font-black rounded-2xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all flex items-center justify-center gap-2 text-lg"
           >
+            <FiCalendar />
             View My Bookings
+            <FiArrowRight />
           </button>
           <button
             onClick={() => navigate("/")}
-            className="w-full border-2 border-purple-600 text-purple-600 font-semibold py-2 rounded-lg hover:bg-purple-50"
+            className="w-full py-4 bg-white border-2 border-gray-200 text-gray-700 font-black rounded-2xl hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2"
           >
-            Continue Shopping
+            <FiHome />
+            Back to Home
           </button>
         </div>
 
-        <p className="text-xs text-gray-500 mt-6">
+        <p className="text-xs text-gray-400 font-bold mt-8">
           Need help?{" "}
-          <a href="#" className="text-purple-600 hover:underline">
-            Contact support
-          </a>
+          <button className="text-primary hover:underline">Contact support</button>
         </p>
       </div>
     </div>

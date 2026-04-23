@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiMapPin, FiStar, FiTruck, FiHeart, FiArrowRight } from "react-icons/fi";
+import { FiMapPin, FiStar, FiTruck, FiHeart, FiArrowRight, FiEye } from "react-icons/fi";
 
 export default function ListingCard({ listing }) {
   if (!listing) return null;
   const [imageError, setImageError] = useState(false);
+  const [liked, setLiked] = useState(false);
   const imageUrl = listing.images?.[0]?.trim();
   const showImage = !!imageUrl && !imageError;
 
   return (
     <Link
       to={`/listing/${listing._id}`}
-      className="group bg-white rounded-[2rem] border border-gray-100 p-3 card-hover flex flex-col"
+      className="group bg-white rounded-[2rem] border border-gray-100 p-3 flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300"
     >
-      {/* Image Container */}
-      <div className="relative h-64 w-full rounded-[1.5rem] overflow-hidden bg-gray-50">
+      {/* Image */}
+      <div className="relative h-56 w-full rounded-[1.5rem] overflow-hidden bg-gray-50">
         {showImage ? (
           <img
             src={imageUrl}
@@ -24,56 +25,72 @@ export default function ListingCard({ listing }) {
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
-            <span className="text-4xl mb-2">📸</span>
-            <span className="text-sm font-semibold">No Preview</span>
+            <span className="text-5xl mb-2">📸</span>
+            <span className="text-sm font-bold">No Image</span>
           </div>
         )}
-        
+
         {/* Category Badge */}
-        <div className="absolute top-4 left-4 glass py-1.5 px-4 rounded-full text-xs font-black uppercase tracking-wider text-gray-800 shadow-sm">
-          {listing.category}
+        <div className="absolute top-3 left-3">
+          <span className="bg-white/90 backdrop-blur-sm py-1 px-3 rounded-full text-[10px] font-black uppercase tracking-wider text-gray-700 shadow-sm">
+            {listing.category}
+          </span>
         </div>
 
-        {/* Favorite Button */}
-        <button className="absolute top-4 right-4 w-10 h-10 rounded-full glass flex items-center justify-center text-gray-600 hover:text-red-500 hover:bg-white transition-all shadow-sm">
-          <FiHeart size={18} />
+        {/* Like Button */}
+        <button
+          onClick={(e) => { e.preventDefault(); setLiked(!liked); }}
+          className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all ${
+            liked ? "bg-red-500 text-white" : "bg-white/90 backdrop-blur-sm text-gray-500 hover:text-red-500"
+          }`}
+        >
+          <FiHeart size={15} className={liked ? "fill-white" : ""} />
         </button>
 
         {/* Delivery Badge */}
         {listing.deliveryAvailable && (
-          <div className="absolute bottom-4 left-4 bg-green-500 text-white p-2 rounded-xl shadow-lg border border-white/20">
-            <FiTruck size={14} />
+          <div className="absolute bottom-3 left-3 bg-green-500 text-white text-[10px] font-black px-2 py-1 rounded-full flex items-center gap-1 shadow-md">
+            <FiTruck size={10} />
+            Delivery
           </div>
         )}
+
+        {/* Rating Overlay */}
+        <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm py-1 px-2 rounded-full flex items-center gap-1 shadow-sm">
+          <FiStar size={11} className="text-yellow-500 fill-yellow-500" />
+          <span className="text-[11px] font-black text-gray-800">
+            {listing.ratings?.average?.toFixed(1) || "5.0"}
+          </span>
+        </div>
       </div>
 
       {/* Content */}
       <div className="p-4 flex-1 flex flex-col">
-        <div className="flex justify-between items-start mb-2 group-hover:text-primary transition-colors">
-          <h3 className="font-extrabold text-xl line-clamp-1 flex-1 leading-tight">
-            {listing.title}
-          </h3>
-          <div className="flex items-center gap-1 bg-yellow-400/10 text-yellow-600 px-2 py-1 rounded-lg text-xs font-bold">
-            <FiStar className="fill-yellow-600" />
-            {listing.ratings?.average || 0}
-          </div>
+        <h3 className="font-black text-lg text-gray-900 line-clamp-1 mb-1.5 group-hover:text-primary transition-colors">
+          {listing.title}
+        </h3>
+
+        <div className="flex items-center gap-1.5 text-gray-400 text-sm mb-auto font-medium">
+          <FiMapPin size={13} className="text-primary flex-shrink-0" />
+          <span className="line-clamp-1">{listing.location?.city}{listing.location?.state ? `, ${listing.location.state}` : ""}</span>
         </div>
 
-        <div className="flex items-center gap-1.5 text-gray-400 text-sm mb-4 font-medium">
-          <FiMapPin className="text-primary" />
-          <span className="line-clamp-1">{listing.location?.city}, {listing.location?.state || "India"}</span>
-        </div>
-
-        <div className="mt-auto flex items-end justify-between border-t border-gray-50 pt-4">
+        <div className="mt-4 flex items-center justify-between border-t border-gray-50 pt-4">
           <div>
-            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-1">Price per day</span>
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-0.5">Per Day</span>
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-black text-gray-900 italic">₹{listing.pricePerDay}</span>
-              <span className="text-sm font-bold text-gray-400">/day</span>
+              <span className="text-2xl font-black text-gray-900">₹{listing.pricePerDay?.toLocaleString("en-IN")}</span>
+              <span className="text-xs font-bold text-gray-400">/day</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary group-hover:text-white transition-all">
-            <FiArrowRight size={20} />
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 text-xs font-bold text-gray-400">
+              <FiEye size={13} />
+              {listing.views || 0}
+            </div>
+            <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+              <FiArrowRight size={16} />
+            </div>
           </div>
         </div>
       </div>
